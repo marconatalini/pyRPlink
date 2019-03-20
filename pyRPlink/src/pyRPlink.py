@@ -6,9 +6,10 @@ Created on 17 mar 2019
 
 from Codici import Codici
 from Registrazione import Registrazione
+from Timbrature import Timbrature
 import shutil
-from _datetime import datetime
 import os
+import datetime
 
 print("""
 ############################################################
@@ -31,31 +32,35 @@ timbrature = open(timbPath, "w")
 print("OK")
 
 print("Carico le timbrature dai terminali...")
+transactions = Timbrature(['192.168.29.212',])
+ftpFilepath = transactions.getFileTransactionsPath()
+
 registrazioni = []
 errori = []
-ftpFilepath = "TRANSACTIONS.TXT"
+
 logPath = "log"
-ftr = open(ftpFilepath, "r")
 
-for line in ftr:
-    timbratura = Registrazione(line)
-    dipendente = dipendenti.findDipendenteByRfid(timbratura.getCode())
-    if dipendente:
-        registrazioni.append(timbratura.getConvertedString(dipendente.getAScode()))
+if transactions.ok:
+    ftr = open(ftpFilepath, "r")
+    
+    for line in ftr:
+        timbratura = Registrazione(line)
+        dipendente = dipendenti.findDipendenteByRfid(timbratura.getCode())
+        if dipendente:
+            registrazioni.append(timbratura.getConvertedString(dipendente.getAScode()))
+        else:
+            errori.append(line)
+            
+    ftr.close()
+
+    if len(errori):
+        print("Il file dipendenti non era completo. Completalo e riprova.", end=' ')
     else:
-        errori.append(line)
-        
-ftr.close()
-
-if len(errori):
-    print("Il file dipendenti non era completo. Completalo e riprova.", end=' ')
-else:
-    print("Converto i codici dipendente e scrivo il file da importare...", end=' ')
-    timbrature.write("\n".join(registrazioni))
-    timbrature.close()
-    shutil.move(ftpFilepath, os.path.join(logPath,"{}.txt".format(str(datetime.utcnow()).replace(':',''))))
-    print("OK")
-
+        print("Converto i codici dipendente e scrivo il file da importare...", end=' ')
+        timbrature.write("\n".join(registrazioni))
+        timbrature.close()
+        shutil.move(ftpFilepath, os.path.join(logPath,"{}.txt".format(str(datetime.datetime.utcnow()).replace(':',''))))
+        print("OK")
 
 
 if __name__ == '__main__':
