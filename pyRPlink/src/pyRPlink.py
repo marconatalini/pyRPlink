@@ -31,16 +31,17 @@ timbPath = "TIMBRATURE.TXT"
 timbrature = open(timbPath, "w")
 print("OK")
 
-print("Carico le timbrature dai terminali...")
-transactions = Timbrature(['192.168.29.212',])
-ftpFilepath = transactions.getFileTransactionsPath()
+print("Controllo timbrature...")
+for ip in ['192.168.29.212','192.168.29.213','192.168.39.212']:
+    transactions = Timbrature(ip)
+    ftpFilepath = transactions.getFileTransactionsPath()
 
 registrazioni = []
 errori = []
 
 logPath = "log"
 
-if transactions.ok:
+try:
     ftr = open(ftpFilepath, "r")
     
     for line in ftr:
@@ -61,7 +62,9 @@ if transactions.ok:
         timbrature.close()
         shutil.move(ftpFilepath, os.path.join(logPath,"{}.txt".format(str(datetime.datetime.utcnow()).replace(':',''))))
         print("OK")
-
+        print("File TIMBRATURE.TXT pronto da importare.")
+except OSError:
+    print("Nessuna nuova timbratura scaricata.")
 
 if __name__ == '__main__':
     pass

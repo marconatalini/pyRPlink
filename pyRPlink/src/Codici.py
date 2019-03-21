@@ -26,7 +26,7 @@ class Codici(object):
             rfid = sh.cell_value(row, 0)
             code = sh.cell_value(row, 1)
             nome = sh.cell_value(row, 2)
-            if rfid:
+            if sh.cell_type(row,0 ) == xlrd.sheet.XL_CELL_NUMBER:
                 newDip = Dipendente(str(int(rfid)), code, nome)
                 self.codici.append(newDip)
                 
