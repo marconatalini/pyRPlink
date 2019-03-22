@@ -6,23 +6,12 @@ Created on 20 mar 2019
 
 from ftplib import FTP
 import os
-from time import strftime, localtime
-
-fileTransactionsPath = 'TRANSACTIONS.TXT'
 
 class Timbrature(object):
     "Classe per lo scarico delle trimbrature"
     
-    def __init__(self, ip):
+    def __init__(self, ip, fileTransactionsPath):
         
-        try:
-            filesecs = os.path.getmtime(fileTransactionsPath)
-            dataFile = strftime('%d.%m.%Y %H:%M', localtime(filesecs))
-            print("Le timbrature del {} non sono ancora state importate tutte.".format(dataFile))
-            return None
-        except FileNotFoundError:
-            pass
-    
         try:
             print("Connessione al terminale {}...".format(ip), end=' ')
             ftp = FTP(ip)
@@ -36,6 +25,8 @@ class Timbrature(object):
             timbrature.close()
         except TimeoutError:
             print("Connessione fallita. TIMEOUT!")
+        except :
+            print("Nessuna nuova timbratura trovata")
             
     def getFileTransactionsPath(self):
         return fileTransactionsPath

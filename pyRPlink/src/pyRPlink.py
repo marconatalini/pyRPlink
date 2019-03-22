@@ -10,6 +10,7 @@ from Timbrature import Timbrature
 import shutil
 import os
 import datetime
+from time import strftime, localtime
 
 print("""
 ############################################################
@@ -19,6 +20,7 @@ print("""
 ############################################################
 
 """)
+
 
 print("Carico i codici dipendente...", end=' ')
 dipendenti = Codici('dipendenti.xls') 
@@ -31,10 +33,17 @@ timbPath = "TIMBRATURE.TXT"
 timbrature = open(timbPath, "w")
 print("OK")
 
+fileTransactionsPath = 'TRANSACTIONS.TXT'
+try:
+    filesecs = os.path.getmtime(fileTransactionsPath)
+    dataFile = strftime('%d.%m.%Y %H:%M', localtime(filesecs))
+    print("Le timbrature del {} non sono ancora state importate tutte.".format(dataFile))
+except FileNotFoundError:
+    pass
+
 print("Controllo timbrature...")
 for ip in ['192.168.29.212','192.168.29.213','192.168.39.212']:
-    transactions = Timbrature(ip)
-    ftpFilepath = transactions.getFileTransactionsPath()
+    transactions = Timbrature(ip, fileTransactionsPath)
 
 registrazioni = []
 errori = []
@@ -42,7 +51,7 @@ errori = []
 logPath = "log"
 
 try:
-    ftr = open(ftpFilepath, "r")
+    ftr = open(fileTransactionsPath, "r")
     
     for line in ftr:
         timbratura = Registrazione(line)
@@ -60,7 +69,7 @@ try:
         print("Converto i codici dipendente e scrivo il file da importare...", end=' ')
         timbrature.write("\n".join(registrazioni))
         timbrature.close()
-        shutil.move(ftpFilepath, os.path.join(logPath,"{}.txt".format(str(datetime.datetime.utcnow()).replace(':',''))))
+        shutil.move(fileTransactionsPath, os.path.join(logPath,"{}.txt".format(str(datetime.datetime.utcnow()).replace(':',''))))
         print("OK")
         print("File TIMBRATURE.TXT pronto da importare.")
 except OSError:
