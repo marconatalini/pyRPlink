@@ -14,7 +14,11 @@ class Registrazione(object):
     def __init__(self, txtline):
         '''
         Constructor: dalla stringa del rilevatore ricava tutti i parametri
+        012345678901234567890123456
+        01  0000171 27/05/17 0648 0
         00  CCCCCCC DD/MM/YY hhmm V
+        
+        0 = ingresso, 1 = uscita
         '''
         self.txtline = txtline
         
@@ -37,4 +41,4 @@ class Registrazione(object):
         return self.inOut
     
     def getConvertedString(self, asCode):
-        return "00 {:0>7} {} {}".format(asCode, self.timestamp, self.inOut)
+        return "00  {:0>7} {} {}".format(asCode, self.timestamp, self.inOut)
