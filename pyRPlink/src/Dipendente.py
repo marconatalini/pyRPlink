@@ -4,7 +4,7 @@ Created on 16 mar 2019
 @author: Marco
 '''
 
-class Dipendente(object):
+class DIPENDENTE(object):
     '''
     Class del dipendente
     '''

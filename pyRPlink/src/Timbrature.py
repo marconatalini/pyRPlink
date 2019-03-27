@@ -4,17 +4,18 @@ Created on 20 mar 2019
 @author: Marco
 '''
 
-from ftplib import FTP
+from ftplib import FTP, error_perm
 import os
+from socket import timeout
 
-class Timbrature(object):
+class TIMBRATURE(object):
     "Classe per lo scarico delle trimbrature"
     
     def __init__(self, ip, fileTransactionsPath):
         
         try:
             print("Connessione al terminale {}...".format(ip), end=' ')
-            ftp = FTP(ip)
+            ftp = FTP(ip, timeout=2)
             ftp.login('admin', 'admin')
             ftp.rename('TRANSACTIONS.TXT', 'T-TEMP.TXT')
             timbrature = open(fileTransactionsPath, 'ab')
@@ -23,10 +24,9 @@ class Timbrature(object):
             ftp.quit()
             print('OK')
             timbrature.close()
+        except timeout:
+            print("Connessione fallita. TIMEOUT!")
         except TimeoutError:
             print("Connessione fallita. TIMEOUT!")
-        except :
-            print("Nessuna nuova timbratura trovata")
-            
-    def getFileTransactionsPath(self):
-        return fileTransactionsPath
+        except error_perm as err:
+            print("Errore imprevisto :{}".format(err.args[0]))

@@ -6,7 +6,7 @@ Created on 15 mar 2019
 
 import re
 
-class Registrazione(object):
+class REGISTRAZIONE(object):
     '''
     Classe definizione registrazione del rilevatore presenze
     '''

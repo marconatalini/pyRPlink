@@ -5,10 +5,10 @@ Created on 16 mar 2019
 '''
 
 import xlrd
-from Dipendente import Dipendente
+from Dipendente import DIPENDENTE
 
 
-class Codici(object):
+class CODICI(object):
     '''
     Class con l'elenco dei dipendenti e codici letti dal file XLS
     3 colonne: rfid | codice | nome
@@ -27,7 +27,7 @@ class Codici(object):
             code = sh.cell_value(row, 1)
             nome = sh.cell_value(row, 2)
             if sh.cell_type(row,0 ) == xlrd.sheet.XL_CELL_NUMBER:
-                newDip = Dipendente(str(int(rfid)), code, nome)
+                newDip = DIPENDENTE(str(int(rfid)), code, nome)
                 self.codici.append(newDip)
                 
     def getCodici(self):
