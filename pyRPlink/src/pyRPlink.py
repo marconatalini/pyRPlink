@@ -56,7 +56,8 @@ def main():
         print("Controllo timbrature...")
         for ip in ['192.168.29.212','192.168.29.213','192.168.39.212']:
             transactions = TIMBRATURE(ip, fileTransactionsPath)
-    
+        importazioneIncompleta = True
+        
     registrazioni = []
     errori = []
     
