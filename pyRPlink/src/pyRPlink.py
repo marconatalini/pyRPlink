@@ -54,7 +54,8 @@ def main():
     if not(importazioneIncompleta):
         #scarico nuove timbrature
         print("Controllo timbrature...")
-        for ip in ['192.168.29.212','192.168.29.213','192.168.39.212']:
+        #for ip in ['192.168.29.212','192.168.29.213','192.168.39.213']:
+        for ip in ini.getIPS():
             transactions = TIMBRATURE(ip, fileTransactionsPath)
         importazioneIncompleta = True
         
